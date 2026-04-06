@@ -1,0 +1,226 @@
+* Ruby Quipu
+
+A Ruby investigation and implementation of the following paper:
+
+https://ccsenet.org/journal/index.php/cis/article/view/0/52950
+
+We'll start by implementing my understanding of quipu as an organized system of
+integer data. The paper keeps saying "heirarchical, partially unsorted, grouped
+and summed". Each cord encodes a number in base 10, with each knot being a digit.
+Naively, we could implement this as an array of integers from 0-9. In the most
+basic interpretation, we read the knots as an integer.
+
+#+begin_src ruby
+  cord = Class.new do
+    attr_reader :knots
+
+    def initialize
+      @knots = []
+    end
+
+    def <<(val) = @knots << val
+    def to_s = @knots.join
+    def to_i = to_s.to_i
+  end
+
+  a_cord = cord.new
+  a_cord << 1
+  a_cord << 2
+  a_cord << 3
+
+  [a_cord.knots, a_cord.to_i]
+#+end_src
+
+#+RESULTS:
+| (1 2 3) | 123 |
+
+Adding a knot for 1 in the hundreds place, 2 in the tens, and 3 in the units
+we get the integer 123.
+
+** Strand base class
+
+The paper's interface proposes a base class that is an iterable. I debate about
+simply inheriting from ~Array~ to build up the Quipu from Groups of Cords. But the
+standard way of making an iterable in Ruby is to include ~Enumerable~ and define
+~each~. May as well use an array as the object member that holds ~knots~.
+
+#+begin_src ruby :tangle yes
+  class Strand
+    include Enumerable
+
+    def initialize
+      @knots = []
+      @group = false
+      @colour = nil
+      @direction = false
+    end
+
+    def each(&block) = knots.each(&block)
+    def <<(val) = knots << val
+    def length = count
+    def insert(i, x) = knots[i] = x
+    def append(item) = knots.append(item)
+    def concat(strand) = strand.each { |item| append(item) }
+    def clear = knots.clear
+    def copy = Marshal.load(Marshal.dump(self))
+    def decrypt(key) = nil
+    def encrypt = nil
+
+    def to_s
+      "#{group ? 1 : ''}|#{colour}|#{direction ? 1 : ''}|#{knots.join}"
+    end
+
+    private
+
+    attr_accessor :knots
+    attr_reader   :group,
+                  :colour,
+                  :direction
+  end
+#+end_src
+
+** Cord
+
+#+begin_src ruby :tangle yes
+  class Cord < Strand
+    def colour=(rgba_array)
+      @colour = Colour.new(*rgba_array)
+    end
+
+    def direction=(bool)
+      @direction = bool
+    end
+
+    def +(cord)
+      new_value = to_i + cord.to_i
+      @knots = new_value.to_s.chars.map(&:to_i)
+      self
+    end
+
+    def to_i = knots.join.to_i
+
+    class Colour
+      def initialize(r,g,b,a)
+        @colour = [r,g,b,a]
+      end
+
+      def red = @colour[0]
+      def green = @colour[1]
+      def blue = @colour[2]
+      def alpha = @colour[3]
+
+      def to_s = "(#{red}, #{green}, #{blue}, #{alpha})"
+    end
+  end
+#+end_src
+
+** Group
+
+#+begin_src ruby :tangle yes
+  class Group < Strand
+    attr_accessor :top_cord
+    attr_reader :cords
+
+    def initialize(has_top = true)
+      super()
+      @group = true
+      @has_top = has_top
+      @cords = []
+    end
+
+    def top? = !!@has_top
+
+    def add_to_top_cord(cord)
+      return unless @top_cord
+
+      @top_cord += cord
+    end
+
+    def append(cord, top_cord = true)
+    end
+
+    def to_s
+      [super].concat(
+        @cords.map(&:to_s)
+      ).join("\n  ")
+    end
+
+    def clear = nil
+    def copy = nil
+    def extend(cords, top_cord = true) = nil
+    def insert(i, cord, top_cord = true) = nil
+  end
+#+end_src
+
+** Quipu
+
+#+begin_src ruby :tangle yes
+  class Quipu < Strand
+    def copy = nil
+    def deserialize(path) = nil
+    def new_cord = Cord.new
+    def new_group = nil
+    def serialize(path, indent=4, spaces=0) = nil
+  end
+#+end_src
+
+* Reference
+** Python Interface from the paper
+#+begin_src python
+  # 2.2.1 Class base
+  # The interface of base (Base in Python) is given as follows.
+  class Base:
+  def __init__(self) ...
+  def __iter__(self) ...
+  def __len__(self) ...
+  def __next__(self) ...
+  def append(self, x) ...
+  def clear(self) ...
+  def copy(self) ...
+  def decrypt(self, key) ...
+  def encrypt(self, key) ...
+  def extend(self, iterable) ...
+  def insert(self, i, x) ...
+
+  # 2.2.2 Class cord
+  # The interface of cord (Cord) is given as follows.
+  class Cord(Base):
+  def __init__(self, colour_=None, direction_=False) ...
+  def __add__(self, cord) ...
+  @property
+  def colour(self) ...
+  @colour.setter
+  def colour(self, colour_) ...
+  def copy(self) ...
+  @property
+  def direction(self) ...
+  @direction.setter
+  def direction(self, direction_) ...
+  def val(self) ...
+
+  # 2.2.3 Class group
+  # The interface of group (Group) is given as follows.
+  class Group(Base):
+  def __init__(self, top_cord_=True) ...
+  def add_to_top_cord(self, cord) ...
+  def append(self, cord, top_cord_=True) ...
+  def clear(self) ...
+  def copy(self) ...
+  # http://cis.ccsenet.org Computer and Information Science Vol. 19, No. 1; 2026 56
+  def extend(self, cords, top_cord_=True) ...
+  def insert(self, i, cord, top_cord_=True) ...
+  @property
+  def top_cord(self) ...
+  @top_cord.setter
+  def top_cord(self, top_cord_) ...
+
+  # 2.2.4 Class quipu
+  # The interface of quipu (Quipu) is given as follows.
+  class Quipu(Base):
+  def __init__(self) ...
+  def copy(self) ...
+  def deserialize(self, path) ...
+  def new_cord(self) ...
+  def new_group(self) ...
+  def serialize(self, path, indent=4, spaces=0
+#+end_src

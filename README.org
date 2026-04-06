@@ -1,0 +1,6 @@
+* Ruby Quipu
+
+A Ruby investigation and implementation of the Quipu data structure described
+by [[https://ccsenet.org/journal/index.php/cis/article/view/0/52950][this paper.]]
+
+See the literate program [[./quipu.org]].
