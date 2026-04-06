@@ -64,36 +64,56 @@ end
 
 class Group < Strand
   attr_accessor :top_cord
-  attr_reader :cords
+  attr_accessor :cords
 
   def initialize(has_top = true)
     super()
     @group = true
     @has_top = has_top
     @cords = []
+    @top_cord = Cord.new if has_top?
   end
 
-  def top? = !!@has_top
+  def has_top? = !!@has_top
 
   def add_to_top_cord(cord)
-    return unless @top_cord
-
-    @top_cord += cord
+    if has_top?
+      @top_cord += cord
+    else
+      @top_cord = Cord.new
+      @has_top = true
+      @top_cord += cord
+    end
   end
 
   def append(cord, top_cord = true)
+    cords << cord
+
+    add_to_top_cord(cord) if top_cord
   end
 
-  def to_s
-    [super].concat(
-      @cords.map(&:to_s)
-    ).join("\n  ")
+  def to_s = [super, @top_cord, @cords].join("\n  ")
+
+  def clear
+    cords.clear
+    @has_top = false
+    @top_cord = nil
+    self
   end
 
-  def clear = nil
-  def copy = nil
-  def extend(cords, top_cord = true) = nil
-  def insert(i, cord, top_cord = true) = nil
+  def concat(cords, top_cord = true)
+    @cords.concat(cords)
+
+    if top_cord && has_top?
+      cords.each { |cord| @top_cord += cord }
+    end
+  end
+
+  def insert(i, cord, top_cord = true)
+    cords[i] = cord
+
+    add_to_top_cord(cord) if top_cord
+  end
 end
 
 class Quipu < Strand
