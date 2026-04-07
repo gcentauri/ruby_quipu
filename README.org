@@ -4,3 +4,63 @@ A Ruby investigation and implementation of the Quipu data structure described
 by [[https://ccsenet.org/journal/index.php/cis/article/view/0/52950][this paper.]]
 
 See the literate program [[./quipu.org]].
+
+** Example
+
+The ~test.rb~ file isn't currently real tests, but when run intends to exercise
+and output the serialized versions of the data structure.
+
+#+begin_example
+An empty cord =>
+|||
+A red cord with knots =>
+|(255, 0, 0, 255)||12345
+A red cord facing up with knots =>
+|(255, 0, 0, 255)|1|12345
+An group with an empty top cord =>
+1|||
+  |||
+  
+A group with a knotted top cord =>
+1|||
+  |||12345
+  
+A group with top cord and red cord =>
+1|||
+  |||12345
+  |(255, 0, 0, 255)|1|12345
+A group and its copy =>
+1|||
+  |||12345
+  |(255, 0, 0, 255)|1|12345
+1|||
+  |||12345
+  |(255, 0, 0, 255)|1|12345
+An empty group =>
+1|||
+  
+  
+A group with several cords and a top cord =>
+1|||
+  |||37035
+  |(255, 0, 0, 255)|1|12345
+  |(255, 0, 0, 255)|1|12345
+  |(255, 0, 0, 255)|1|12345
+Group with big cord inserted up front =>
+1|||
+  |||61725
+  |(255, 0, 0, 255)|1|24690
+  |(255, 0, 0, 255)|1|12345
+  |(255, 0, 0, 255)|1|12345
+A Quipu =>
+1|||
+  |||12345
+  |(255, 0, 0, 255)|1|12345
+1|||
+  |||61725
+  |(255, 0, 0, 255)|1|24690
+  |(255, 0, 0, 255)|1|12345
+  |(255, 0, 0, 255)|1|12345
+|(255, 0, 0, 255)|1|12345
+|(255, 0, 0, 255)|1|24690
+#+end_example

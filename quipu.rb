@@ -1,6 +1,8 @@
 class Strand
   include Enumerable
 
+  attr_accessor :knots
+
   def initialize
     @knots = []
     @group = false
@@ -16,6 +18,8 @@ class Strand
   def concat(strand) = strand.each { |item| append(item) }
   def clear = knots.clear
   def copy = Marshal.load(Marshal.dump(self))
+
+  # TODO
   def decrypt(key) = nil
   def encrypt = nil
 
@@ -25,7 +29,6 @@ class Strand
 
   private
 
-  attr_accessor :knots
   attr_reader   :group,
                 :colour,
                 :direction
@@ -63,14 +66,12 @@ class Cord < Strand
 end
 
 class Group < Strand
-  attr_accessor :top_cord
-  attr_accessor :cords
+  attr_reader :top_cord
 
   def initialize(has_top = true)
     super()
     @group = true
     @has_top = has_top
-    @cords = []
     @top_cord = Cord.new if has_top?
   end
 
@@ -87,36 +88,42 @@ class Group < Strand
   end
 
   def append(cord, top_cord = true)
-    cords << cord
+    @knots << cord
 
     add_to_top_cord(cord) if top_cord
   end
 
-  def to_s = [super, @top_cord, @cords].join("\n  ")
+  def to_s = ["1|||", @top_cord, knots].join("\n  ")
+
+  def to_i
+    return top_cord.to_i if has_top?
+
+    knots.map(&:to_i).sum
+  end
 
   def clear
-    cords.clear
-    @has_top = false
-    @top_cord = nil
+    knots.clear
+    @top_cord = Cord.new
     self
   end
 
-  def concat(cords, top_cord = true)
-    @cords.concat(cords)
-
-    if top_cord && has_top?
-      cords.each { |cord| add_to_top_cord(cord) }
-    end
+  def concat(cords, update_top_cord = true)
+    cords.each { |cord|
+      add_to_top_cord(cord) if update_top_cord && has_top?
+      knots << cord
+    }
   end
 
   def insert(i, cord, top_cord = true)
-    cords[i] = cord
+    knots[i] = cord
 
     add_to_top_cord(cord) if top_cord
   end
 end
 
 class Quipu < Strand
+  def to_s = knots.join("\n")
+
   # TODO
   def deserialize(path)
     File.readlines(path).each do |line|
@@ -128,8 +135,6 @@ class Quipu < Strand
       end
     end
   end
-
-  def to_s = knots.map(&:to_s).join("\n")
 
   def new_cord = Cord.new
   def new_group = Group.new
