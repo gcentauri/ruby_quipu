@@ -165,7 +165,7 @@ standard way of making an iterable in Ruby is to include ~Enumerable~ and define
     end
 
     def insert(i, cord, top_cord = true)
-      cords[i] = cnord
+      cords[i] = cord
 
       add_to_top_cord(cord) if top_cord
     end
@@ -176,10 +176,20 @@ standard way of making an iterable in Ruby is to include ~Enumerable~ and define
 
 #+begin_src ruby :tangle yes
   class Quipu < Strand
-    def copy = nil
-    def deserialize(path) = nil
+    # TODO
+    def deserialize(path)
+      File.readlines(path).each do |line|
+        parts = line.split
+        case parts
+        in ["1", *]
+          knots << Group.new
+        in ["", String, *, String]
+        end
+      end
+    end
+
     def new_cord = Cord.new
-    def new_group = nil
+    def new_group = Group.new
     def serialize(path, indent=4, spaces=0) = nil
   end
 #+end_src

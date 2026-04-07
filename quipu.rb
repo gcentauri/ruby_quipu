@@ -105,7 +105,7 @@ class Group < Strand
     @cords.concat(cords)
 
     if top_cord && has_top?
-      cords.each { |cord| @top_cord += cord }
+      cords.each { |cord| add_to_top_cord(cord) }
     end
   end
 
@@ -117,9 +117,21 @@ class Group < Strand
 end
 
 class Quipu < Strand
-  def copy = nil
-  def deserialize(path) = nil
+  # TODO
+  def deserialize(path)
+    File.readlines(path).each do |line|
+      parts = line.split
+      case parts
+      in ["1", *]
+        knots << Group.new
+      in ["", String, *, String]
+      end
+    end
+  end
+
+  def to_s = knots.map(&:to_s).join("\n")
+
   def new_cord = Cord.new
-  def new_group = nil
+  def new_group = Group.new
   def serialize(path, indent=4, spaces=0) = nil
 end
