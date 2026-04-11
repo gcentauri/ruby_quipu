@@ -216,6 +216,57 @@ standard way of making an iterable in Ruby is to include ~Enumerable~ and define
   end
 #+end_src
 
+* Optimizing Cord to Integer
+
+#+begin_src ruby :results output :exports both
+  @knots = [1,2,3,4,5,6,7,8,9,0]
+
+  def coercion
+    @knots.join.to_i
+  end
+
+  def functional
+    @knots.reduce(0) { |memo, i| memo * 10 + i }
+  end
+
+  def imperative_each
+    result = 0
+    @knots.each do |i|
+      result = result * 10 + i
+    end
+    result
+  end
+
+  def imperative_while
+    result = 0
+    i = 0
+    len = @knots.length
+    while i < len
+      result = result * 10 + @knots[i]
+      i += 1
+    end
+    result
+  end
+
+  require 'benchmark'
+
+  n = 1_000_000
+
+  Benchmark.bm do |x|
+    x.report("coercion:") { n.times { coercion } }
+    x.report("functional") { n.times { functional } }
+    x.report("imperative_each:") { n.times { imperative_each } }
+    x.report("imperative_while:") { n.times { imperative_while } }
+  end
+#+end_src
+
+#+RESULTS:
+:                        user     system      total        real
+: coercion:          0.766777   0.003551   0.770328 (  0.770378)
+: functional         0.350813   0.001270   0.352083 (  0.352157)
+: imperative_each:   0.266080   0.000249   0.266329 (  0.266360)
+: imperative_while:  0.257264   0.000087   0.257351 (  0.257376)
+
 * Reference
 ** Python Interface from the paper
 #+begin_src python
