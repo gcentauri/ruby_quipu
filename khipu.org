@@ -5,16 +5,20 @@ A Ruby investigation and implementation of the following paper:
 https://ccsenet.org/journal/index.php/cis/article/view/0/52950
 
 We'll start by implementing my understanding of khipu as an organized system of
-integer data. The paper keeps saying a khipu id "heirarchical, partially
-unsorted, grouped and summed". Its a tree structure that allows arbitrary O(1)
+integer data. The paper says a khipu is "heirarchical, partially
+unsorted, grouped and summed". Its a tree structure that allows arbitrary
 inserts (heirarchical and unsorted). Elements of the tree can be grouped, and
 groups have a built in summation via the "top-cord" feature.
 
 ** A Cord of Knots is an Integer
 
-Each cord encodes a number in base 10, with each knot being a digit.
-Naively, we could implement this as an array of integers from 0-9. In the most
-basic interpretation, we read the knots as an integer.
+In the most basic interpretation, we read each knots as an integer. The the last
+element is the units place, the next-to-last is the tens place and so on. Each cord
+thus encodes a number in base 10, with each knot being a digit.
+
+Naively, we could implement this as an array that only holds integers from 0-9. Without
+types in Ruby, we just have to abide by the contract manually. Here is a sketch of
+a Cord object which evaluates to an integer:
 
 #+begin_src ruby :results code :exports both
   cord = Class.new do
