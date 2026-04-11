@@ -16,7 +16,7 @@ Each cord encodes a number in base 10, with each knot being a digit.
 Naively, we could implement this as an array of integers from 0-9. In the most
 basic interpretation, we read the knots as an integer.
 
-#+begin_src ruby
+#+begin_src ruby :results code :exports both
   cord = Class.new do
     attr_reader :knots
 
@@ -34,11 +34,16 @@ basic interpretation, we read the knots as an integer.
   a_cord << 2
   a_cord << 3
 
-  [a_cord.knots, a_cord.to_i]
+  {
+    knots: a_cord.knots,
+    value: a_cord.to_i,
+  }
 #+end_src
 
 #+RESULTS:
-| (1 2 3) | 123 |
+#+begin_src ruby
+{knots: [1, 2, 3], value: 123}
+#+end_src
 
 Adding a knot for 1 in the hundreds place, 2 in the tens, and 3 in the units
 we get the integer 123.
