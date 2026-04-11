@@ -121,7 +121,7 @@ class Group < Strand
   end
 end
 
-class Quipu < Strand
+class Khipu < Strand
   def to_s = knots.join("\n")
 
   # TODO

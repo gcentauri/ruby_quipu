@@ -1,9 +1,9 @@
-* Ruby Quipu
+* Ruby Khipu
 
-A Ruby investigation and implementation of the Quipu data structure described
+A Ruby investigation and implementation of the Khipu data structure described
 by [[https://ccsenet.org/journal/index.php/cis/article/view/0/52950][this paper.]]
 
-See the literate program [[./quipu.org]].
+See the literate program [[./khipu.org]].
 
 ** Example
 
@@ -52,7 +52,7 @@ Group with big cord inserted up front =>
   |(255, 0, 0, 255)|1|24690
   |(255, 0, 0, 255)|1|12345
   |(255, 0, 0, 255)|1|12345
-A Quipu =>
+A Khipu =>
 1|||
   |||12345
   |(255, 0, 0, 255)|1|12345
