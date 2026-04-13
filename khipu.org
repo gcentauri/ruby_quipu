@@ -52,6 +52,16 @@ a Cord object which evaluates to an integer:
 Adding a knot for 1 in the hundreds place, 2 in the tens, and 3 in the units
 we get the integer 123.
 
+** COMMENT Create a Knot Abstraction?
+
+Knots are like bytes, in that they could represent different kinds of information.
+For the initial example, we assume that a khipu is composed of groups of cords where
+each knot is of the same type. In our case, it is Integers, but a Knot could be
+anything really. Perhaps the color of the Cord tells you how to interpret the knots
+in a cord. Practically, keeping the elements of a Cord as Integers, but allowing
+arbitrarily high numbers would work like a primary key pointer to some other
+data structure. This would screw up the methods for adding things together.
+
 ** Strand base class
 
 The paper's interface proposes a base class that is an iterable. I debate about
