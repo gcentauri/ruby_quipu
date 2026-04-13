@@ -6,9 +6,9 @@ https://ccsenet.org/journal/index.php/cis/article/view/0/52950
 
 We'll start by implementing my understanding of khipu as an organized system of
 integer data. The paper says a khipu is "heirarchical, partially
-unsorted, grouped and summed". Its a tree structure that allows arbitrary
-inserts (heirarchical and unsorted). Elements of the tree can be grouped, and
-groups have a built in summation via the "top-cord" feature.
+unsorted, grouped and summed". Its a tree structure(heirarchical) that allows
+arbitrary insertion (partially unsorted). Elements of the tree can be grouped,
+and groups have a built in summation via the "top-cord" feature.
 
 ** A Cord of Knots is an Integer
 
