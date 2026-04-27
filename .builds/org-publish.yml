@@ -1,0 +1,20 @@
+image: debian/testing
+oauth: git.sr.ht/REPOSITORIES:RW git.sr.ht/PROFILE:RO
+packages:
+  - hut
+  - emacs
+sources:
+  - https://git.sr.ht/~shoshin/ruby-khipu
+environment:
+  KHIPU: khipu.org
+tasks:
+  - export-readme: |
+      cd ruby-khipu
+      emacs -Q --batch \
+        --eval='(setq vc-handled-backends nil)' \
+        --eval '(setq org-startup-folded nil)' \
+        --eval '(setq org-element-cache-persistent nil)' \
+        --eval "(require 'ox-html)" \
+        --eval "(find-file \"$KHIPU\")" \
+        --eval '(org-html-export-to-html nil nil nil t)'
+      hut git update --readme $(basename "$KHIPU" .org).html
