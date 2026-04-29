@@ -7,7 +7,61 @@ A Ruby investigation and implementation of the data structure proposed based
 on the Inka [[https://www.khipufieldguide.com/guidebook/Introduction.html][Khipu]]
 that is proposed in the following paper:
 
-https://ccsenet.org/journal/index.php/cis/article/view/0/52950
+[[https://ccsenet.org/journal/index.php/cis/article/view/0/52950][Quipu Data Structure]] by Richard Dosselmann  Edward Doolittle  Vatika Tayal
+
+** What is a Khipu?
+
+The Inkan civilization and people of the central Andes recorded information
+by tying knots into cords of woven threads. Most of what has been deciphered
+is numeric information. The knots are tied on cords in a way to represent a
+base 10 system. One type of knot per digit 1-9, the absence of a knot being
+zero, plus position on a cord encodes any integer. In addition, the khipu
+knots had variations making them easier to read, or encoding additional
+information as signs.
+
+#+begin_quote
+Since the ones position on quipu cords are shown in a distinctive way (i.e., using
+long knots and figure-eight knots), it is usually clear where a number ends. Thus,
+it is possible that a single quipu cord could contain several numbers.[fn:1]
+#+end_quote
+
+More information is present than has been deciphered. Cords come in different
+colors and weaving styles. Cords are clustered into groups, and some have a
+single cord tied off the top in a different direction.
+
+** Strands of Information
+
+The Khipu is an information dense object meant for human interpretation. It was
+a specialized skill to interpret and encode structured and narrative meaning
+into the objects.
+
+#+begin_quote
+I think of khipu as an ancient form of “spreadsheet”, made from woven cord. That’s
+an intentional metaphor - a spreadsheet both calculates (expected) and communicates
+(unexpected). Most modern khipu scholars agree that khipus serve both purposes, but
+beyond that, much disagreement exists. Our ability to “read” a khipu has been lost,
+and khipus remain one of the few remaining ancient communication mediums that remain
+enigmatic...[fn:2]
+#+end_quote
+
+Computer data structures are similar, but often built primarily with binary machine
+interpretation first, rather than for humans. An integer is stored in memory as a
+series of zeroes and ones. 11000000111001 in binary is 12345 in base 10. It would
+be much harder to read a cord with 14 knots than 5 as a human.
+
+Implementing an interpretation of the cloth Khipu as a data structure feels like
+an interesting space between. Computers use numbers to represent everything they
+do. A Khipu is a structured way to store numbers with additional interpretation
+"baked in". Plus, its fun!
+
+** Weaving and Tangling
+
+This document is written as a [[https://en.wikipedia.org/wiki/Literate_programming#bodyContent][literate program.]] The code blocks encountered
+here are the primary source for the Ruby source files in the repository. It is
+a happy coincidence that my favorite way to write is with [[https://orgmode.org/][Org mode for GNU Emacs]].
+It allows us to *tangle* out the source code woven into the document. The tree
+structure of an org-mode document is heirarchical and grouped like Khipu.
+Working with programs this way helps see and understand information in new ways.
 
 * Implementation
 
@@ -348,3 +402,7 @@ in a cord. Practically, keeping the elements of a Cord as Integers, but allowing
 arbitrarily high numbers would work like a primary key pointer to some other
 data structure. This would screw up the methods for adding things together.
 
+* Footnotes
+
+[fn:1] https://en.wikipedia.org/wiki/Quipu
+[fn:2] https://www.khipufieldguide.com/guidebook/Introduction.html
