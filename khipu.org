@@ -73,7 +73,7 @@ and groups have a built in summation via the "top-cord" feature.
 
 ** A Cord of Knots is an Integer
 
-In the most basic interpretation, we read each knots as an integer. The the last
+In the most basic interpretation, we read each knot as an integer. The the last
 element is the units place, the next-to-last is the tens place and so on. Each cord
 thus encodes a number in base 10, with each knot being a digit.
 
@@ -95,9 +95,7 @@ a Cord object which evaluates to an integer:
   end
 
   a_cord = cord.new
-  a_cord << 1
-  a_cord << 2
-  a_cord << 3
+  a_cord << 1 << 2 << 3
 
   {
     knots: a_cord.knots,
