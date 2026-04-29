@@ -1,8 +1,15 @@
-* Ruby Khipu
+#+TITLE: Ruby Khipu
+#+AUTHOR: Grant Shangreaux
 
-A Ruby investigation and implementation of the following paper:
+* Introduction
+
+A Ruby investigation and implementation of the data structure proposed based
+on the Inka [[https://www.khipufieldguide.com/guidebook/Introduction.html][Khipu]]
+that is proposed in the following paper:
 
 https://ccsenet.org/journal/index.php/cis/article/view/0/52950
+
+* Implementation
 
 We'll start by implementing my understanding of khipu as an organized system of
 integer data. The paper says a khipu is "heirarchical, partially
