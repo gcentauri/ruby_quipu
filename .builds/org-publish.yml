@@ -14,6 +14,8 @@ tasks:
         --eval='(setq vc-handled-backends nil)' \
         --eval '(setq org-startup-folded nil)' \
         --eval '(setq org-element-cache-persistent nil)' \
+        --eval "(package-install 'htmlize)" \
+        --eval "(require 'htmlize)" \
         --eval "(require 'ox-html)" \
         --eval "(find-file \"$KHIPU\")" \
         --eval '(org-html-export-to-html nil nil nil t)'
