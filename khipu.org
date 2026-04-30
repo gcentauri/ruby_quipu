@@ -7,7 +7,7 @@ A Ruby investigation and implementation of the data structure proposed based
 on the Inka [[https://www.khipufieldguide.com/guidebook/Introduction.html][Khipu]]
 that is proposed in the following paper:
 
-[[https://ccsenet.org/journal/index.php/cis/article/view/0/52950][Quipu Data Structure]] by Richard Dosselmann  Edward Doolittle  Vatika Tayal
+[[https://ccsenet.org/journal/index.php/cis/article/view/0/52950][Quipu Data Structure]] by Richard Dosselmann, Edward Doolittle, Vatika Tayal
 
 ** What is a Khipu?
 
