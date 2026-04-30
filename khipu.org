@@ -80,7 +80,9 @@ For example, say we use dashes (~---~) for the cord, then symbols to
 represent knots, which in turn represent a numeral:
 
 1 → ●
+
 4 → ⁛
+
 5 → ⸭
 
 Then this cord: ~--●--⸭-----⁛--~ is the integer 1,504.
@@ -93,6 +95,69 @@ hundreds place, and 1 (●) in the thousands.
 Each cord thus encodes an integer with each knot being a digit in base 10.[fn:3]
 
 ** A Cord is a Sequence of Elements
+
+"Sequence of Elements" is a loaded term. We're heading towards computer world.
+For our purposes, an *ELEMENT* is one part of a *SEQUENCE*. The elements of a
+sequence follow an order, so they model the position part of the Khipu I mentioned
+above. If a Cord is a Sequence of Elements, the elements are the Knots, and the
+Cord itself is the Sequence.
+
+Now, computers use many flavors of sequences all the time. The primary thing they
+have in common is that they have zero or more elements, and you often want to do
+some operation that applies to some or all of the elements within the sequence.
+
+*** Ruby Arrays are Sequences
+
+The [[https://www.ruby-lang.org/en/][Ruby Programming Language]] has a sequence [[https://en.wikipedia.org/wiki/Data_structure][data structure]] called an ~Array~.
+An ~Array~ is a collection of elements stored in computer memory. The elements can be
+retrieved by their *index*. Most programming languages start counting from
+zero, so the first element in an ~Array~ would be at index ~0~. Ruby uses a special
+syntax to input and output arrays, using square brackets ~[]~. The square brackets
+there are an empty array!
+
+If we let an ~Array~ stand in for our Cord, and regular numerals stand in for Knots,
+then writing the number 1,504 above would be written like this in Ruby:
+
+#+name: simple-array-cord
+#+begin_src ruby
+  [1, 5, 0, 4]
+#+end_src
+
+*** This Document is a Program
+
+If you are reading this from the comfort of Emacs, you would be in an ~org-mode~
+buffer. Any block of source code can be evaluated on your computer, provided you've
+configured it. Assuming perhaps you haven't, but you /are/ in Emacs, move the cursor
+to the source block below and press Control-C twice on your keyboard. Emacs will ask
+If you want to run the code. Type ~yes~ to do so. It will enable you to run Ruby code
+from within this file.
+
+#+name: load-ruby-for-org-babel
+#+begin_src emacs-lisp :results none
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((emacs-lisp . t)
+     (ruby . t)))
+#+end_src
+
+Now assuming that worked you should be able to do the same on the following block
+of Ruby code:
+
+#+begin_src ruby :results output :exports both
+  cord = [1, 5, 0, 4]
+  print(cord, "\n")
+  cord.each { |knot| print(knot) }
+#+end_src
+
+#+RESULTS:
+: [1, 5, 0, 4]
+: 1504
+
+I'm leaving the result of myself running it here in the document, if you run it
+again it won't change. Try changing one of the knot numbers to see what happens
+when you evaluate the code again.
+
+*** A Simple Ruby Cord
 
 Naively, we could implement this as an array that only holds integers from 0-9. Here is a sketch of a Cord object which evaluates to an integer:
 
