@@ -73,13 +73,28 @@ and groups have a built in summation via the "top-cord" feature.
 
 ** A Cord of Knots is an Integer
 
-In the most basic interpretation, we read each knot as an integer. The the last
-element is the units place, the next-to-last is the tens place and so on. Each cord
-thus encodes a number in base 10, with each knot being a digit.
+In the most basic interpretation, we read the combined knots of a cord as an
+integer.
 
-Naively, we could implement this as an array that only holds integers from 0-9. Without
-types in Ruby, we just have to abide by the contract manually. Here is a sketch of
-a Cord object which evaluates to an integer:
+For example, say we use dashes (~---~) for the cord, then symbols to
+represent knots, which in turn represent a numeral:
+
+1 → ●
+4 → ⁛
+5 → ⸭
+
+Then this cord: ~--●--⸭-----⁛--~ is the integer 1,504.
+
+What matters in this interpretation are the POSITION of the knot, and the VALUE
+of the knot as a numeral. Because POSITION is relevant, we know that the numeral
+4 (⁛) is in the units place, there's an implied zero in the tens, 5 (⸭) in the
+hundreds place, and 1 (●) in the thousands.
+
+Each cord thus encodes an integer with each knot being a digit in base 10.[fn:3]
+
+** A Cord is a Sequence of Elements
+
+Naively, we could implement this as an array that only holds integers from 0-9. Here is a sketch of a Cord object which evaluates to an integer:
 
 #+begin_src ruby :results code :exports both
   cord = Class.new do
@@ -404,3 +419,4 @@ data structure. This would screw up the methods for adding things together.
 
 [fn:1] https://en.wikipedia.org/wiki/Quipu
 [fn:2] https://www.khipufieldguide.com/guidebook/Introduction.html
+[fn:3] https://en.wikipedia.org/wiki/Decimal
