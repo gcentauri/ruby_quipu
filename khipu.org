@@ -168,35 +168,66 @@ when you evaluate the code again.
 
 Lets take a look at that code again and go through it line by line:
 
-#+begin_src ruby :results output
+*** Assigning a variable
+
+#+begin_src ruby
   cord = [1, 5, 0, 4]
 #+end_src
 
-The first line creates an ~Array~ with 4 numbers in it. Starting
-from index ~0~ are the elements 1, 5, 0, and 4. Its a sequence of length 4. We
-*assign* the ~Array~ to the symbol ~cord~. Now any time Ruby sees ~cord~ it will know
-it is actually talking about the array ~[1, 5, 0, 4]~.
+"Ruby, the value of the *symbol* ~cord~ equals the ~Array [1, 5, 0, 4]~."
+The elements of the array ~cord~ are all integers. Index ~0~ points to the value
+~1~ up to index ~3~ pointing at the value ~4~.
 
-#+begin_src ruby :results output
+To take a number /out/ of the sequence, Ruby has *the index operator ~[]~*. Hmmm.
+That is the same symbol as making an ~Array~. Think of it as a window that lets you
+zoom to any point of the sequence to see what is there. It also lets you put
+something else in that spot. Like this:
+
+#+begin_src example
+  cord[0]
+  => 1
+  cord[3] = 9
+  => 9
+  cord
+  => [1, 5, 0, 9]
+#+end_src
+
+
+*** Printing some text
+
+#+begin_src ruby :results none
   print(cord, "\n")
 #+end_src
 
 The second line prints the array and a newline character (~"\n"~). Well, it doesn't
 print it on paper on a real-life printer. The text prints to the "standard
 output" which you can imagine like a terminal screen. You can print to other places
-too, like a file or stream.
+too, like a file or stream. The important part for us is printing lets us see what
+the *value* of the variable ~cord~ is... when it is represented as text to print.
+Here it prints the array the same way that we type it in ~[1, 5, 0, 4]~. This is
+handy because you can cut and paste it into your Ruby interpreter if needed.
 
-#+begin_src ruby :results output
+*** Print each knot in the cord, one at a time
+
+#+begin_src ruby :results none
   cord.each { |knot| print(knot) }
 #+end_src
 
-The third line takes advantage of the ~Array~'s nature as a sequence. Ruby calls this
-concept an ~Enumerable~, basically any collection that can be indexed in a similar
-way to an array. Any ~Enumerable~ object in Ruby responds to the message ~each~ by
-*yielding* every element to the *block* that follows ~each~. The *block* is the code
-surrounded by curly braces ~{ |knot| print(knot) }~. The ~|knot|~ part assigns one
-element at a time to become the ~knot~ for a moment, then it gets printed. Then the
-~cord.each~ sends the next knot through the block until the end of the sequence.
+The third line takes advantage of the ~Array~'s nature as a sequence. In Ruby, the
+word for any type of sequence is ~Enumerable~. An array is enumerated by integers
+starting at ~0~, up to the length of the list -1. The main message that ~Enumerable~
+objects respond to is ~each~. ~Array#each~ starts going through the list,
+*yielding* each element to the *block* that follows.
+
+Now this is really cool. The *block* is the /code/ surrounded by curly braces:
+~{ |knot| print(knot) }~. The insides of this block can be any Ruby code at all.
+This is powerful, now with /anything/ that acts like an ~Enumerable~ and responds
+to ~each~ can pass its elements, one at a time, to code that can be customized
+for what ever purpose is needed at the time.
+
+The ~|knot|~ part assigns one element at a time to become THE ~knot~ for a moment,
+then it gets printed. Then the ~cord.each~ yields the next knot to the block
+until the end of the sequence.
 
 ** A Simple Ruby Cord
 
