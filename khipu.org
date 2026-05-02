@@ -29,40 +29,6 @@ More information is present than has been deciphered. Cords come in different
 colors and weaving styles. Cords are clustered into groups, and some have a
 single cord tied off the top in a different direction.
 
-** Strands of Information
-
-The Khipu is an information dense object meant for human interpretation. It was
-a specialized skill to interpret and encode structured and narrative meaning
-into the objects.
-
-#+begin_quote
-I think of khipu as an ancient form of “spreadsheet”, made from woven cord. That’s
-an intentional metaphor - a spreadsheet both calculates (expected) and communicates
-(unexpected). Most modern khipu scholars agree that khipus serve both purposes, but
-beyond that, much disagreement exists. Our ability to “read” a khipu has been lost,
-and khipus remain one of the few remaining ancient communication mediums that remain
-enigmatic...[fn:2]
-#+end_quote
-
-Computer data structures are similar, but often built primarily with binary machine
-interpretation first, rather than for humans. An integer is stored in memory as a
-series of zeroes and ones. 11000000111001 in binary is 12345 in base 10. It would
-be much harder to read a cord with 14 knots than 5 as a human.
-
-Implementing an interpretation of the cloth Khipu as a data structure feels like
-an interesting space between. Computers use numbers to represent everything they
-do. A Khipu is a structured way to store numbers with additional interpretation
-"baked in". Plus, its fun!
-
-** Weaving and Tangling
-
-This document is written as a [[https://en.wikipedia.org/wiki/Literate_programming#bodyContent][literate program.]] The code blocks encountered
-here are the primary source for the Ruby source files in the repository. It is
-a happy coincidence that my favorite way to write is with [[https://orgmode.org/][Org mode for GNU Emacs]].
-It allows us to *tangle* out the source code woven into the document. The tree
-structure of an org-mode document is heirarchical and grouped like Khipu.
-Working with programs this way helps see and understand information in new ways.
-
 ** A Cord of Knots is an Integer
 
 In the most basic interpretation, we read the combined knots of a cord as an
@@ -79,159 +45,77 @@ represent knots, which in turn represent a numeral:
 
 Then this cord: ~--●--⸭-----⁛--~ is the integer 1,504.
 
-What matters in this interpretation are the POSITION of the knot, and the VALUE
-of the knot as a numeral. Because POSITION is relevant, we know that the numeral
+What matters in this interpretation are the POSITION of the knot and the VALUE
+of the knot as a number. Because POSITION is relevant, we know that the numeral
 4 (⁛) is in the units place, there's an implied zero in the tens, 5 (⸭) in the
 hundreds place, and 1 (●) in the thousands.
 
-Each cord thus encodes an integer with each knot being a digit in base 10.[fn:3]
+~--1--5--0--4--~
+~--●--⸭-----⁛--~
 
+Each cord encodes an integer, with each knot being a base 10 digit.[fn:3]
 
-* Reading and Writing with Ruby
+** Strands of Information
+
+The Khipu is an information dense object meant for human interpretation.
+Khipu specialists called "khipu-kamayuq", maker-of-knots, encoded structured
+and narrative meaning into the woven cords. There was a spiritual connection
+cloth as a sacred object, and more meaning was added by the knot-makers. We
+will focus on interpreting them as numbers, but the khipu-kamayuq certainly
+had more ways of reading the knots. Even with only numbers, khipu were powerful
+ways of storing and communicating information.
+
+#+begin_quote
+I think of khipu as an ancient form of “spreadsheet”, made from woven cord. That’s
+an intentional metaphor - a spreadsheet both calculates (expected) and communicates
+(unexpected). Most modern khipu scholars agree that khipus serve both purposes, but
+beyond that, much disagreement exists. Our ability to “read” a khipu has been lost,
+and khipus remain one of the few remaining ancient communication mediums that remain
+enigmatic...[fn:2]
+#+end_quote
+
+Computer data structures are similar, but built for binary machine
+interpretation first. An integer is stored in memory as a series of zeroes and
+ones. 11000000111001 in binary is 12345 in base 10. It is more efficient for
+humans to use 10 as a base to encode integers, but a computer simply can't.
+Every bit of data is made up of only ones and zeroes. The amazing part is how
+almost anything we can think of is encoded in binary. If a stranger from
+the future found a string of ones-and-zeroes, would the ability to read the
+encoded information be lost as well?
+
+** Weaving and Tangling
+
+Transforming the cloth Khipu, cords woven and knotted by hand, into a computer
+data structure feels like an interesting space between present, past, and future.
+So much of my mind is occupied by computer languages and data modeling. As
+an indigenous American, the opportunity to weave indigenous knowledge and
+ways of communication into my world is a welcome thing.
+
+This document is written as a [[https://en.wikipedia.org/wiki/Literate_programming#bodyContent][literate program.]] The code blocks encountered
+here are the source for the Ruby code files present in the repository. It is
+a happy coincidence that my favorite way to write is with [[https://orgmode.org/][Org mode for GNU Emacs]].
+It allows us to *tangle* out the source code woven into the document. The tree
+structure of an org-mode document is heirarchical and grouped like Khipu.
+Working with programs this way helps see and understand information in new ways.
+
+* Implementation
+
+We'll start by implementing my understanding of khipu as an organized system of
+integer data. The paper says a khipu is "heirarchical, partially
+unsorted, grouped and summed". Its a tree structure(heirarchical) that allows
+arbitrary insertion (partially unsorted). Elements of the tree can be grouped,
+and groups have a built in summation via the "top-cord" feature.
+
+** A Simple Ruby Cord
 
 If you aren't a programmer, don't worry. I hope that the physical example
 of the khipu will stay in your mind as we explore how Ruby encodes information
 in text. The code examples will avoid complexity and illustrate some fundamental
-parts of thinking with a computer language.
+parts of thinking with a computer language. If you're curious to know more,
+[[./ruby.org]] holds my thoughts on understanding it better.
 
-The goal is to *express* the concept through a specialized language for creating
-and transforming data. The "stuff" that a computer program works on or with is
-data. A number is data. A string of text like "Bob and Alice went walking" is
-data. Some data is in the shape of a tree. The shape of data is important to
-understand when *processing* it.
-
-** A Cord is a Sequence of Elements
-
-"Sequence of Elements" is a loaded term. We're heading towards computer world.
-For our purposes, an *ELEMENT* is one part of a *SEQUENCE*. The elements of a
-sequence follow an order, so they model the position part of the Khipu I mentioned
-above. If a Cord is a Sequence of Elements, the elements are the Knots, and the
-Cord itself is the Sequence.
-
-Now, computers use many flavors of sequences all the time. The primary thing they
-have in common is that they have zero or more elements, and you often want to do
-some operation that applies to some or all of the elements within the sequence.
-
-** Ruby Arrays are Sequences
-
-The [[https://www.ruby-lang.org/en/][Ruby Programming Language]] has a sequence [[https://en.wikipedia.org/wiki/Data_structure][data structure]] called an ~Array~.
-An ~Array~ is a collection of elements stored in computer memory. The elements can be
-retrieved by their *index*. Most programming languages start counting from
-zero, so the first element in an ~Array~ would be at index ~0~. Ruby uses a special
-syntax to input and output arrays, using square brackets ~[]~. The square brackets
-there are an empty array!
-
-If we let an ~Array~ stand in for our Cord, and regular numerals stand in for Knots,
-then writing the number 1,504 above would be written like this in Ruby:
-
-#+name: simple-array-cord
-#+begin_src ruby
-  [1, 5, 0, 4]
-#+end_src
-
-** This Document is a Program
-
-If you are reading this from the comfort of Emacs, you would be in an ~org-mode~
-buffer. Any block of source code can be evaluated on your computer, provided you've
-configured it. Assuming perhaps you haven't, but you /are/ in Emacs, move the cursor
-to the source block below and press Control-C twice on your keyboard. Emacs will ask
-If you want to run the code. Type ~yes~ to do so. It will enable you to run Ruby code
-from within this file.
-
-#+name: load-ruby-for-org-babel
-#+begin_src emacs-lisp :results none
-  (org-babel-do-load-languages
-   'org-babel-load-languages
-   '((emacs-lisp . t)
-     (ruby . t)))
-#+end_src
-
-Now assuming that worked you should be able to do the same on the following block
-of Ruby code. I'll describe what it does when the Ruby language "interpreter" reads
-the code and "evaluates" the expressions.
-
-#+begin_src ruby :results output :exports both
-  cord = [1, 5, 0, 4]
-  print(cord, "\n")
-  cord.each { |knot| print(knot) }
-#+end_src
-
-#+RESULTS:
-: [1, 5, 0, 4]
-: 1504
-
-I'm leaving the result of myself running it here in the document, if you run it
-again it won't change. Try changing one of the knot numbers to see what happens
-when you evaluate the code again.
-
-** Reading some Ruby
-
-Lets take a look at that code again and go through it line by line:
-
-*** Assigning a variable
-
-#+begin_src ruby
-  cord = [1, 5, 0, 4]
-#+end_src
-
-"Ruby, the value of the *symbol* ~cord~ equals the ~Array [1, 5, 0, 4]~."
-The elements of the array ~cord~ are all integers. Index ~0~ points to the value
-~1~ up to index ~3~ pointing at the value ~4~.
-
-To take a number /out/ of the sequence, Ruby has *the index operator ~[]~*. Hmmm.
-That is the same symbol as making an ~Array~. Think of it as a window that lets you
-zoom to any point of the sequence to see what is there. It also lets you put
-something else in that spot. Like this:
-
-#+begin_src example
-  cord[0]
-  => 1
-  cord[3] = 9
-  => 9
-  cord
-  => [1, 5, 0, 9]
-#+end_src
-
-
-*** Printing some text
-
-#+begin_src ruby :results none
-  print(cord, "\n")
-#+end_src
-
-The second line prints the array and a newline character (~"\n"~). Well, it doesn't
-print it on paper on a real-life printer. The text prints to the "standard
-output" which you can imagine like a terminal screen. You can print to other places
-too, like a file or stream. The important part for us is printing lets us see what
-the *value* of the variable ~cord~ is... when it is represented as text to print.
-Here it prints the array the same way that we type it in ~[1, 5, 0, 4]~. This is
-handy because you can cut and paste it into your Ruby interpreter if needed.
-
-*** Print each knot in the cord, one at a time
-
-#+begin_src ruby :results none
-  cord.each { |knot| print(knot) }
-#+end_src
-
-The third line takes advantage of the ~Array~'s nature as a sequence. In Ruby, the
-word for any type of sequence is ~Enumerable~. An array is enumerated by integers
-starting at ~0~, up to the length of the list -1. The main message that ~Enumerable~
-objects respond to is ~each~. ~Array#each~ starts going through the list,
-*yielding* each element to the *block* that follows.
-
-Now this is really cool. The *block* is the /code/ surrounded by curly braces:
-~{ |knot| print(knot) }~. The insides of this block can be any Ruby code at all.
-This is powerful, now with /anything/ that acts like an ~Enumerable~ and responds
-to ~each~ can pass its elements, one at a time, to code that can be customized
-for what ever purpose is needed at the time.
-
-The ~|knot|~ part assigns one element at a time to become THE ~knot~ for a moment,
-then it gets printed. Then the ~cord.each~ yields the next knot to the block
-until the end of the sequence.
-
-** A Simple Ruby Cord
-
-Naively, we could implement this as an array that only holds integers from 0-9. Here is a sketch of a Cord object which evaluates to an integer:
+Naively, a ~cord~ could be an ~Array~ that only holds integers from 0-9.
+Here is a sketch of a Cord object which evaluates to an integer:
 
 #+begin_src ruby :results code :exports both
   cord = Class.new do
@@ -266,25 +150,12 @@ into a number is to use ~array.join.to_i~. It isn't going to be the most
 efficient solution to convert cords to numbers, but its intuitive. We can do
 an optimization exercise later.
 
-* Implementation
-
-We'll start by implementing my understanding of khipu as an organized system of
-integer data. The paper says a khipu is "heirarchical, partially
-unsorted, grouped and summed". Its a tree structure(heirarchical) that allows
-arbitrary insertion (partially unsorted). Elements of the tree can be grouped,
-and groups have a built in summation via the "top-cord" feature.
-
 ** Strand base class
 
-The paper's interface proposes a base class that is an iterable. I debate about
-simply inheriting from ~Array~ to build up the Khipu from Groups of Cords. But the
-standard way of making an iterable in Ruby is to include ~Enumerable~ and define
-~each~. May as well use an array as the object member that holds ~knots~.
+The paper's interface proposes a base class that is an iterable.
 
 #+begin_src ruby :tangle yes
   class Strand
-    include Enumerable
-
     attr_accessor :knots
 
     def initialize
@@ -565,3 +436,4 @@ data structure. This would screw up the methods for adding things together.
 [fn:1] https://en.wikipedia.org/wiki/Quipu
 [fn:2] https://www.khipufieldguide.com/guidebook/Introduction.html
 [fn:3] https://en.wikipedia.org/wiki/Decimal
+
