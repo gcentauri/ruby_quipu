@@ -431,6 +431,69 @@ in a cord. Practically, keeping the elements of a Cord as Integers, but allowing
 arbitrarily high numbers would work like a primary key pointer to some other
 data structure. This would screw up the methods for adding things together.
 
+However, see:
+
+https://nithinbekal.com/posts/numeric-operations-value-objects/
+
+#+begin_src ruby :session knots
+  Knot = Data.define(:digit) do
+    def self.call(...) = new(...)
+
+    def to_i = digit.to_i
+
+    def +(other)
+      Knot.new(self.to_i + other.to_i)
+    end
+
+    def coerce(n)
+      [Knot.new(n), self]
+    end
+  end
+
+  one, two = [Knot.(1), Knot.(2)]
+
+  one + two + 3
+#+end_src
+
+#+RESULTS:
+: #<data Knot digit=6>
+
+*** Ruby Numeric#coerce
+
+#+begin_example
+call-seq:
+coerce(other) -> array
+
+Returns a 2-element array containing two numeric elements,
+formed from the two operands +self+ and +other+,
+of a common compatible type.
+
+Of the Core and Standard Library classes,
+Integer, Rational, and Complex use this implementation.
+
+Examples:
+
+i = 2 # => 2
+i.coerce(3) # => [3, 2]
+i.coerce(3.0) # => [3.0, 2.0]
+i.coerce(Rational(1, 2)) # => [0.5, 2.0]
+i.coerce(Complex(3, 4)) # Raises RangeError.
+
+r = Rational(5, 2) # => (5/2)
+r.coerce(2) # => [(2/1), (5/2)]
+r.coerce(2.0) # => [2.0, 2.5]
+r.coerce(Rational(2, 3)) # => [(2/3), (5/2)]
+r.coerce(Complex(3, 4)) # => [(3+4i), ((5/2)+0i)]
+
+c = Complex(2, 3) # => (2+3i)
+c.coerce(2) # => [(2+0i), (2+3i)]
+c.coerce(2.0) # => [(2.0+0i), (2+3i)]
+c.coerce(Rational(1, 2)) # => [((1/2)+0i), (2+3i)]
+c.coerce(Complex(3, 4)) # => [(3+4i), (2+3i)]
+
+Raises an exception if any type conversion fails.
+#+end
+
 * Footnotes
 
 [fn:1] https://en.wikipedia.org/wiki/Quipu
